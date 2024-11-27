@@ -13,7 +13,7 @@ import Foundation
  A fully-featured Camera Session supporting preview, video, photo, frame processing, and code scanning outputs.
  All changes to the session have to be controlled via the `configure` function.
  */
-final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
+final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate, AVCaptureDataOutputSynchronizerDelegate  {
   // Configuration
   private var isInitialized = false
   var configuration: CameraConfiguration?
@@ -27,6 +27,10 @@ final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
   var photoOutput: AVCapturePhotoOutput?
   var videoOutput: AVCaptureVideoDataOutput?
   var audioOutput: AVCaptureAudioDataOutput?
+
+  var depthOutput: AVCaptureDepthDataOutput?
+  var outputSynchronizer: AVCaptureDataOutputSynchronizer?
+
   var codeScannerOutput: AVCaptureMetadataOutput?
   // State
   var metadataProvider = MetadataProvider()
@@ -273,6 +277,34 @@ final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
       onAudioFrame(sampleBuffer: sampleBuffer)
     default:
       break
+    }
+  }
+
+  public final func dataOutputSynchronizer(_: AVCaptureDataOutputSynchronizer, didOutput synchronizedDataCollection: AVCaptureSynchronizedDataCollection) {
+
+    guard let syncedVideoData = synchronizedDataCollection.synchronizedData(for: videoOutput!) as? AVCaptureSynchronizedSampleBufferData else {
+      ReactLogger.log(level: .warning, message: "Video data out of sync for current frame")
+      return
+    }
+    guard !syncedVideoData.sampleBufferWasDropped else {
+      ReactLogger.log(level: .warning, message: "Video data buffer data dropped")
+      return
+    }
+    guard let syncedDepthData = synchronizedDataCollection.synchronizedData(for: depthOutput!) as? AVCaptureSynchronizedDepthData else {
+      ReactLogger.log(level: .warning, message: "Depth data out of sync for current video frame")
+      return
+    }
+    guard !syncedDepthData.depthDataWasDropped else {
+      ReactLogger.log(level: .warning, message: "Depth data buffer dropped")
+      return
+    }
+
+    let depthData = syncedDepthData.depthData
+    let depthPixelBuffer = depthData.depthDataMap
+    let sampleBuffer = syncedVideoData.sampleBuffer
+
+    if let delegate {
+      delegate.onFrame(sampleBuffer: sampleBuffer, orientation: .portrait, isMirrored: false, depth: depthPixelBuffer)
     }
   }
 

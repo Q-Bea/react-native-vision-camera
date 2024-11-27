@@ -65,6 +65,8 @@ extension CameraSession {
     }
     photoOutput = nil
     videoOutput = nil
+    depthOutput = nil
+    outputSynchronizer = nil
     codeScannerOutput = nil
 
     // Photo Output
@@ -106,10 +108,9 @@ extension CameraSession {
         throw CameraError.parameter(.unsupportedOutput(outputDescriptor: "video-output"))
       }
       captureSession.addOutput(videoOutput)
+      videoOutput.alwaysDiscardsLateVideoFrames = true
 
       // 2. Configure
-      videoOutput.setSampleBufferDelegate(self, queue: CameraQueues.videoQueue)
-      videoOutput.alwaysDiscardsLateVideoFrames = true
       if configuration.isMirrored {
         // 2.1. If mirroring is enabled, mirror all connections along the vertical axis
         videoOutput.isMirrored = true
@@ -118,6 +119,32 @@ extension CameraSession {
           videoOutput.orientation = videoOutput.orientation.flipped()
           VisionLogger.log(level: .info, message: "AVCaptureVideoDataOutput will rotate Frames to \(videoOutput.orientation)...")
         }
+      }
+
+      if enableDepthData {
+        VisionLogger.log(level: .info, message: "Adding Depth Data output...")
+        let depthDataOutput = AVCaptureDepthDataOutput()
+
+        guard captureSession.canAddOutput(depthDataOutput) else {
+          throw CameraError.parameter(.unsupportedOutput(outputDescriptor: "depth-data-output"))
+        }
+
+        depthDataOutput.isFilteringEnabled = true
+        captureSession.addOutput(depthDataOutput)
+
+        if let connection = depthDataOutput.connection(with: .depthData) {
+          connection.isEnabled = true
+        } else {
+          throw CameraError.parameter(.unsupportedOutput(outputDescriptor: "depth-data-output"))
+        }
+
+        let outputSynchronizer = AVCaptureDataOutputSynchronizer(dataOutputs: [videoOutput, depthDataOutput])
+        outputSynchronizer.setDelegate(self, queue: CameraQueues.videoQueue)
+
+        self.depthOutput = depthDataOutput
+        self.outputSynchronizer = outputSynchronizer
+      } else {
+        videoOutput.setSampleBufferDelegate(self, queue: CameraQueues.videoQueue)
       }
 
       self.videoOutput = videoOutput

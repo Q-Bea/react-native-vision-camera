@@ -25,7 +25,7 @@ public final class CameraView: UIView, CameraSessionDelegate, PreviewViewDelegat
 
   // props that require reconfiguring
   @objc var cameraId: NSString?
-  @objc var enableDepthData = false
+  @objc var enableDepthData: false
   @objc var enablePortraitEffectsMatteDelivery = false
   @objc var enableBufferCompression = false
   @objc var isMirrored = false
@@ -362,7 +362,7 @@ public final class CameraView: UIView, CameraSessionDelegate, PreviewViewDelegat
     ])
   }
 
-  func onFrame(sampleBuffer: CMSampleBuffer, orientation: Orientation, isMirrored: Bool) {
+  func onFrame(sampleBuffer: CMSampleBuffer, orientation: Orientation, isMirrored: Bool, depth: CVPixelBuffer? = nil) {
     // Update latest frame that can be used for snapshot capture
     latestVideoFrame = Snapshot(imageBuffer: sampleBuffer, orientation: orientation)
 
@@ -372,10 +372,18 @@ public final class CameraView: UIView, CameraSessionDelegate, PreviewViewDelegat
     #if VISION_CAMERA_ENABLE_FRAME_PROCESSORS
       if let frameProcessor = frameProcessor {
         // Call Frame Processor
-        let frame = Frame(buffer: sampleBuffer,
-                          orientation: orientation.imageOrientation,
-                          isMirrored: isMirrored)
-        frameProcessor.call(frame)
+        if depth != nil {
+          let frame = Frame(buffer: sampleBuffer,
+                            orientation: orientation.imageOrientation,
+                            isMirrored: isMirrored,
+                            depth: depth)
+          frameProcessor.call(frame)
+        } else {
+          let frame = Frame(buffer: sampleBuffer,
+                            orientation: orientation.imageOrientation,
+                            isMirrored: isMirrored)
+          frameProcessor.call(frame)
+        }
       }
     #endif
   }

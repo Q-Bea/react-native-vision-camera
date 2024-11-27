@@ -12,6 +12,7 @@
 
 @implementation Frame {
   CMSampleBufferRef _Nonnull _buffer;
+  CVPixelBufferRef _Nullable _depth;
   UIImageOrientation _orientation;
   BOOL _isMirrored;
 }
@@ -20,6 +21,17 @@
   self = [super init];
   if (self) {
     _buffer = buffer;
+    _orientation = orientation;
+    _isMirrored = isMirrored;
+  }
+  return self;
+}
+
+- (instancetype) initWithBufferAndDepth:(CMSampleBufferRef)buffer orientation:(UIImageOrientation)orientation isMirrored:(BOOL)isMirrored depth:(CVPixelBufferRef)depth {
+  self = [super init];
+  if (self) {
+    _buffer = buffer;
+    _depth = depth;
     _orientation = orientation;
     _isMirrored = isMirrored;
   }
@@ -45,6 +57,20 @@
                                     userInfo:nil];
   }
   return _buffer;
+}
+
+- (CVPixelBufferRef)depth {
+  if (!self.isValid) {
+    @throw [[NSException alloc] initWithName:@"capture/frame-invalid"
+                                      reason:@"Trying to access an already closed Frame! "
+                                              "Are you trying to access the Image data outside of a Frame Processor's lifetime?\n"
+                                              "- If you want to use `console.log(frame)`, use `console.log(frame.toString())` instead.\n"
+                                              "- If you want to do async processing, use `runAsync(...)` instead.\n"
+                                              "- If you want to use runOnJS, increment it's ref-count: `frame.incrementRefCount()`"
+                                    userInfo:nil];
+  }
+
+  return _depth;
 }
 
 - (BOOL)isValid {
