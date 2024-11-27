@@ -121,7 +121,7 @@ extension CameraSession {
         }
       }
 
-      if enableDepthData {
+      if video.enableDepthData {
         VisionLogger.log(level: .info, message: "Adding Depth Data output...")
         let depthDataOutput = AVCaptureDepthDataOutput()
 

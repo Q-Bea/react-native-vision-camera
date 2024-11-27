@@ -181,6 +181,7 @@ final class CameraConfiguration {
     var pixelFormat: PixelFormat = .yuv
     var enableBufferCompression = false
     var enableHdr = false
+    var enableDepthData = false
     var enableFrameProcessor = false
   }
 

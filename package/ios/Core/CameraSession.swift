@@ -283,19 +283,19 @@ final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
   public final func dataOutputSynchronizer(_: AVCaptureDataOutputSynchronizer, didOutput synchronizedDataCollection: AVCaptureSynchronizedDataCollection) {
 
     guard let syncedVideoData = synchronizedDataCollection.synchronizedData(for: videoOutput!) as? AVCaptureSynchronizedSampleBufferData else {
-      ReactLogger.log(level: .warning, message: "Video data out of sync for current frame")
+      VisionLogger.log(level: .warning, message: "Video data out of sync for current frame")
       return
     }
     guard !syncedVideoData.sampleBufferWasDropped else {
-      ReactLogger.log(level: .warning, message: "Video data buffer data dropped")
+      VisionLogger.log(level: .warning, message: "Video data buffer data dropped")
       return
     }
     guard let syncedDepthData = synchronizedDataCollection.synchronizedData(for: depthOutput!) as? AVCaptureSynchronizedDepthData else {
-      ReactLogger.log(level: .warning, message: "Depth data out of sync for current video frame")
+      VisionLogger.log(level: .warning, message: "Depth data out of sync for current video frame")
       return
     }
     guard !syncedDepthData.depthDataWasDropped else {
-      ReactLogger.log(level: .warning, message: "Depth data buffer dropped")
+      VisionLogger.log(level: .warning, message: "Depth data buffer dropped")
       return
     }
 

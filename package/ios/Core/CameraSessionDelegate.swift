@@ -44,7 +44,7 @@ protocol CameraSessionDelegate: AnyObject {
   /**
    Called for every frame (if video or frameProcessor is enabled)
    */
-  func onFrame(sampleBuffer: CMSampleBuffer, orientation: Orientation, isMirrored: Bool, depth: CVPixelBuffer? = nil)
+  func onFrame(sampleBuffer: CMSampleBuffer, orientation: Orientation, isMirrored: Bool, depth: CVPixelBuffer)
   /**
    Called whenever a QR/Barcode has been scanned. Only if the CodeScanner Output is enabled
    */

@@ -25,7 +25,7 @@ public final class CameraView: UIView, CameraSessionDelegate, PreviewViewDelegat
 
   // props that require reconfiguring
   @objc var cameraId: NSString?
-  @objc var enableDepthData: false
+  @objc var enableDepthData = false
   @objc var enablePortraitEffectsMatteDelivery = false
   @objc var enableBufferCompression = false
   @objc var isMirrored = false
@@ -211,7 +211,9 @@ public final class CameraView: UIView, CameraSessionDelegate, PreviewViewDelegat
         config.video = .enabled(config: CameraConfiguration.Video(pixelFormat: getPixelFormat(),
                                                                   enableBufferCompression: enableBufferCompression,
                                                                   enableHdr: videoHdr,
-                                                                  enableFrameProcessor: enableFrameProcessor))
+                                                                  enableFrameProcessor: enableFrameProcessor,
+                                                                  enableDepthData: true // So it works
+                                                                  ))
       } else {
         config.video = .disabled
       }

@@ -27,7 +27,7 @@
   return self;
 }
 
-- (instancetype) initWithBufferAndDepth:(CMSampleBufferRef)buffer orientation:(UIImageOrientation)orientation isMirrored:(BOOL)isMirrored depth:(CVPixelBufferRef)depth {
+- (instancetype) initWithBufferAndDepth:(CMSampleBufferRef)buffer orientation:(UIImageOrientation)orientation isMirrored:(BOOL)isMirrored depth:(CVPixelBuffer)depth {
   self = [super init];
   if (self) {
     _buffer = buffer;
@@ -59,7 +59,7 @@
   return _buffer;
 }
 
-- (CVPixelBufferRef)depth {
+- (CVPixelBuffer)depth {
   if (!self.isValid) {
     @throw [[NSException alloc] initWithName:@"capture/frame-invalid"
                                       reason:@"Trying to access an already closed Frame! "

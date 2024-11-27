@@ -17,14 +17,14 @@ NS_ASSUME_NONNULL_BEGIN
 @interface Frame : NSObject
 
 - (instancetype)initWithBuffer:(CMSampleBufferRef)buffer orientation:(UIImageOrientation)orientation isMirrored:(BOOL)isMirrored;
-- (instancetype)initWithBufferAndDepth:(CMSampleBufferRef)buffer orientation:(UIImageOrientation)orientation isMirrored:(BOOL)isMirrored depth:(CVPixelBufferRef)depth;
+- (instancetype)initWithBufferAndDepth:(CMSampleBufferRef)buffer orientation:(UIImageOrientation)orientation isMirrored:(BOOL)isMirrored depth:(CVPixelBuffer)depth;
 - (instancetype)init NS_UNAVAILABLE;
 
 - (void)incrementRefCount;
 - (void)decrementRefCount;
 
 @property(nonatomic, readonly) CMSampleBufferRef buffer;
-@property(nonatomic, readonly, nullable) CVPixelBufferRef depth;
+@property(nonatomic, readonly, nullable) CVPixelBuffer depth;
 @property(nonatomic, readonly) UIImageOrientation orientation;
 
 @property(nonatomic, readonly) NSString* pixelFormat;
