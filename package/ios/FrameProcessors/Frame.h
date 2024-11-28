@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface Frame : NSObject
 
 - (instancetype)initWithBuffer:(CMSampleBufferRef)buffer orientation:(UIImageOrientation)orientation isMirrored:(BOOL)isMirrored;
-- (instancetype)initWithBufferAndDepth:(CMSampleBufferRef)buffer orientation:(UIImageOrientation)orientation isMirrored:(BOOL)isMirrored depth:(CVPixelBuffer)depth;
+- (instancetype)initWithBufferAndDepth:(CMSampleBufferRef)buffer orientation:(UIImageOrientation)orientation isMirrored:(BOOL)isMirrored depth:(nullable CVPixelBufferRef)depth;
 - (instancetype)init NS_UNAVAILABLE;
 
 - (void)incrementRefCount;
