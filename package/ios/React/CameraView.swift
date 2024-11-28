@@ -211,8 +211,8 @@ public final class CameraView: UIView, CameraSessionDelegate, PreviewViewDelegat
         config.video = .enabled(config: CameraConfiguration.Video(pixelFormat: getPixelFormat(),
                                                                   enableBufferCompression: enableBufferCompression,
                                                                   enableHdr: videoHdr,
-                                                                  enableFrameProcessor: enableFrameProcessor,
-                                                                  enableDepthData: true // So it works
+                                                                  enableDepthData: true, // So it works
+                                                                  enableFrameProcessor: enableFrameProcessor
                                                                   ))
       } else {
         config.video = .disabled
@@ -364,7 +364,7 @@ public final class CameraView: UIView, CameraSessionDelegate, PreviewViewDelegat
     ])
   }
 
-  func onFrame(sampleBuffer: CMSampleBuffer, orientation: Orientation, isMirrored: Bool, depth: CVPixelBufferRef? = nil) {
+  func onFrame(sampleBuffer: CMSampleBuffer, orientation: Orientation, isMirrored: Bool, depth: CVPixelBuffer? = nil as CVPixelBuffer?) {
     // Update latest frame that can be used for snapshot capture
     latestVideoFrame = Snapshot(imageBuffer: sampleBuffer, orientation: orientation)
 
@@ -381,7 +381,7 @@ public final class CameraView: UIView, CameraSessionDelegate, PreviewViewDelegat
                             depth: depth)
           frameProcessor.call(frame)
         } else {
-          let frame = Frame(buffer: sampleBuffer,
+          let frame = Frame(bufferAndDepth: sampleBuffer,
                             orientation: orientation.imageOrientation,
                             isMirrored: isMirrored)
           frameProcessor.call(frame)
