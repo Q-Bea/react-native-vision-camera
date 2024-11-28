@@ -375,7 +375,7 @@ public final class CameraView: UIView, CameraSessionDelegate, PreviewViewDelegat
       if let frameProcessor = frameProcessor {
         // Call Frame Processor
         if depth != nil {
-          let frame = Frame(buffer: sampleBuffer,
+          let frame = Frame(bufferAndDepth: sampleBuffer,
                             orientation: orientation.imageOrientation,
                             isMirrored: isMirrored,
                             depth: depth)
