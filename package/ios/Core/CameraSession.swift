@@ -322,7 +322,7 @@ final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
 
     if let delegate {
       // Call Frame Processor (delegate) for every Video Frame
-      delegate.onFrame(sampleBuffer: sampleBuffer, orientation: orientation, isMirrored: isMirrored, nil as CVPixelBuffer?)
+      delegate.onFrame(sampleBuffer: sampleBuffer, orientation: orientation, isMirrored: isMirrored, depth: nil as CVPixelBuffer?)
     }
   }
 

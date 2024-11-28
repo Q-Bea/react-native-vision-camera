@@ -121,7 +121,8 @@ extension CameraSession {
         }
       }
 
-      if video.enableDepthData {
+      // if configuration.video.enableDepthData
+      if true { // FIXME make this obey, but for now, always enable depth data
         VisionLogger.log(level: .info, message: "Adding Depth Data output...")
         let depthDataOutput = AVCaptureDepthDataOutput()
 
