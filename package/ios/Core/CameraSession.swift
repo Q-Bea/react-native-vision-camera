@@ -299,7 +299,8 @@ final class CameraSession: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
       return
     }
 
-    let depthData = syncedDepthData.depthData
+    // Only use Float32 depth data
+    let depthData = (syncedDepthData.depthData).converting(toDepthDataType: kCVPixelFormatType_DepthFloat32)
     let depthPixelBuffer = depthData.depthDataMap
     let sampleBuffer = syncedVideoData.sampleBuffer
 
