@@ -381,7 +381,7 @@ public final class CameraView: UIView, CameraSessionDelegate, PreviewViewDelegat
                             depth: depth)
           frameProcessor.call(frame)
         } else {
-          let frame = Frame(bufferAndDepth: sampleBuffer,
+          let frame = Frame(buffer: sampleBuffer,
                             orientation: orientation.imageOrientation,
                             isMirrored: isMirrored)
           frameProcessor.call(frame)
