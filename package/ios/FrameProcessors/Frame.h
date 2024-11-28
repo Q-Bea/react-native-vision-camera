@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)decrementRefCount;
 
 @property(nonatomic, readonly) CMSampleBufferRef buffer;
-@property(nonatomic, readonly, nullable) CVPixelBuffer depth;
+@property(nonatomic, readonly, nullable) CVPixelBufferRef depth;
 @property(nonatomic, readonly) UIImageOrientation orientation;
 
 @property(nonatomic, readonly) NSString* pixelFormat;
